@@ -193,7 +193,7 @@ int need_graft_path(struct dentry *dentry)
 
 	if(parent_info->perm == PERM_ANDROID && 
 			!strcasecmp(dentry->d_name.name, "obb") &&
-			sbi->options.multi_user) {
+			sbi->options.multiuser) {
 		ret = 1;
 	}
 	dput(parent);
@@ -248,13 +248,13 @@ int is_base_obbpath(struct dentry *dentry)
 	struct sdcardfs_sb_info *sbi = SDCARDFS_SB(dentry->d_sb);
 
 	spin_lock(&SDCARDFS_D(dentry)->lock); 
-	/* if multi_user is true */
-	if(sbi->options.multi_user && parent_info->perm == PERM_PRE_ROOT && 
+	/* if multiuser is true */
+	if(sbi->options.multiuser && parent_info->perm == PERM_PRE_ROOT && 
 			!strcasecmp(dentry->d_name.name, "obb")) {
 		ret = 1;
 	} 
-	/* if multi_user is false, /Android/obb is the base obbpath */
-	else if (!sbi->options.multi_user && parent_info->perm == PERM_ANDROID && 
+	/* if multiuser is false, /Android/obb is the base obbpath */
+	else if (!sbi->options.multiuser && parent_info->perm == PERM_ANDROID && 
 			!strcasecmp(dentry->d_name.name, "obb")) {
 		ret = 1;
 	}

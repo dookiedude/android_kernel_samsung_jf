@@ -34,22 +34,22 @@ enum {
 	Opt_lower_fs,
 	Opt_reserved_mb,
 	Opt_mask,
-	Opt_multi_user,
+	Opt_multiuser,
 	Opt_label,
 	Opt_type,
 	Opt_err,
 };
 
 static const match_table_t sdcardfs_tokens = {
-	{Opt_low_uid, "low_uid=%u"},
-	{Opt_low_gid, "low_gid=%u"},
+	{Opt_low_uid, "fsuid=%u"},
+	{Opt_low_gid, "fsgid=%u"},
 	{Opt_gid, "gid=%u"},
-	{Opt_userid, "userid=%u"},
+	{Opt_userid, "userid=%d"},
 	{Opt_debug, "debug"},
 	{Opt_lower_fs, "lower_fs=%s"},
 	{Opt_reserved_mb, "reserved_mb=%u"},
-	{Opt_mask, "mask=%o"},
-	{Opt_multi_user, "multi_user"},
+	{Opt_mask, "mask=%u"},
+	{Opt_multiuser, "multiuser"},
 	{Opt_label, "label=%s"},
 	{Opt_type, "type=%s"},
 	{Opt_err, NULL}
@@ -76,8 +76,8 @@ static int parse_options(struct super_block *sb, char *options, int silent,
 	opts->reserved_mb = 0;
 	/* by default, mask is 0 */
 	opts->mask = 0;
-	/* by default, multi_user is false */
-	opts->multi_user = false;
+	/* by default, multiuser is false */
+	opts->multiuser = false;
 	opts->label = NULL;
 	opts->type = TYPE_NONE;
 
@@ -137,12 +137,12 @@ static int parse_options(struct super_block *sb, char *options, int silent,
 			opts->reserved_mb = option;
 			break;
 		case Opt_mask:
-			if (match_octal(&args[0], &option))
+			if (match_int(&args[0], &option))
 				goto invalid_option;
 			opts->mask = option;
 			break;
-		case Opt_multi_user:
-			opts->multi_user = true;
+		case Opt_multiuser:
+			opts->multiuser = true;
 			break;
 		case Opt_label:
 			label = match_strdup(&args[0]);
@@ -311,7 +311,7 @@ static int sdcardfs_read_super(struct super_block *sb, const char *dev_name,
 	err = sdcardfs_interpose(sb->s_root, sb, &lower_path);
 	if (!err) {
 		/* setup permission policy */
-		if(sb_info->options.multi_user){
+		if(sb_info->options.multiuser){
 			setup_derived_state(sb->s_root->d_inode, 
 				PERM_PRE_ROOT, sb_info->options.userid, AID_ROOT, sb_info->options.gid, false);
 			sb_info->obbpath_s = kzalloc(PATH_MAX, GFP_KERNEL);

@@ -26,7 +26,7 @@
  * 2016.02.   : Release Version 3.2.0
  *    - remove get_lower_inode(), make sdcardfs use only unlink_callback()
  *    - modify name hash creation because it's different with vfat's
- *    - obb will be used only multi_user option is enabled
+ *    - obb will be used only multiuser option is enabled
  *    - modify sdcardfs_setattr because it changes i_size without spinlock
  *      it can make race condition with fsstack_copy_inode_size()
  */

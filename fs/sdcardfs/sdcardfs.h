@@ -211,7 +211,7 @@ struct sdcardfs_mount_options {
 	lower_fs_t lower_fs;
 	unsigned int reserved_mb;
 	mode_t mask;
-	bool multi_user;
+	bool multiuser;
 	char *label;
 	type_t type;
 };
